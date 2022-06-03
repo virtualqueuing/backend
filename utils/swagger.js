@@ -7,8 +7,8 @@ module.exports = swaggerJsDoc({
       title: 'Virtual Queuing Apis Documentation',
       version: '1.0.0',
       contact: {
-        name: 'John',
-        email: 'jzeva1213@gmail.com',
+        name: 'Roy',
+        email: 'wanyansuroy@gmail.com',
       },
       description: 'This is the API documentation for Virtual Queuing',
     },
