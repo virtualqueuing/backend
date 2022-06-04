@@ -5,13 +5,30 @@ const getAllQueues = async (req, res) => {
   return res.json(queues);
 };
 
+const addService = async (req, res) => {
+  const service = new Service({});
+  await service.save();
+  return res.status(201).json(service);
+};
+
 const addQueue = async (req, res) => {
   const { name, phoneNumber, queueNumber, guestsNumber, tableSize, notes } = req.body;
-  const queue = new Service({
-    queues: { name, phoneNumber, queueNumber, guestsNumber, tableSize, notes },
+  const currentDate = new Date(Date.now());
+  const matchingDate = `${currentDate.getYear() + 1900}-${
+    currentDate.getMonth() + 1
+  }-${currentDate.getDate()}`;
+  // logic to check if database with today's date exists
+  const todayService = await Service.findOne({ dateString: matchingDate }).exec();
+  await todayService.queues.push({
+    name,
+    phoneNumber,
+    queueNumber,
+    guestsNumber,
+    tableSize,
+    notes,
   });
-  await queue.save();
-  return res.status(201).json(queue);
+  await todayService.save();
+  return res.status(201).json(todayService);
 };
 
 // const getQueueById = async (req, res) => {
@@ -26,4 +43,4 @@ const addQueue = async (req, res) => {
 //   return res.json(queue);
 // };
 
-module.exports = { getAllQueues, addQueue };
+module.exports = { getAllQueues, addService, addQueue };
