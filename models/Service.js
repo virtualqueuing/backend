@@ -53,9 +53,12 @@ const QueueSchema = new mongoose.Schema(
 );
 
 const serviceSchema = new mongoose.Schema({
-  date: {
-    type: Date,
-    default: () => Date.now(),
+  dateString: {
+    type: String,
+    default: () => {
+      const day = new Date(Date.now());
+      return `${day.getYear() + 1900}-${day.getMonth() + 1}-${day.getDate()}`;
+    },
     immutable: true,
   },
   queues: [QueueSchema],
