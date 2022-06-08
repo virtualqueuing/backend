@@ -154,10 +154,10 @@ const addQueue = async (req, res) => {
  *    tags: [Queues]
  *    parameters:
  *      - name: id
- *        in: params
+ *        in: path
  *        description: filter queues by code
  *        schema:
- *          type: number
+ *          type: string
  *    responses:
  *      200:
  *        description: The queue selected by code
