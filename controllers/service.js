@@ -16,7 +16,7 @@ const Service = require('../models/Service');
  *          type:string
  *          description:the name of the queue
  *        phoneNumber:
- *          type:number
+ *          type:string
  *          description:the phoneNumber of the queue
  *        queueNumber:
  *          type:number
@@ -38,7 +38,7 @@ const Service = require('../models/Service');
  *          description:the notes of the queue
  *      example:
  *        name: Jason
- *        phoneNumber: 0400123456
+ *        phoneNumber: "0400123456"
  *        guestsNumber: 4
  *        queueNumber: 1
  *        tableSize: Medium
