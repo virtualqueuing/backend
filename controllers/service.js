@@ -127,7 +127,9 @@ const addQueue = async (req, res) => {
   // logic to check if database with today's date exists
   try {
     const todayService = await Service.findOne({ dateString: matchingDate }).exec();
-    const lastQueueNumber = todayService.queues[todayService.queues.length - 1].queueNumber;
+    const lastQueueNumber = todayService.queues.length
+      ? todayService.queues[todayService.queues.length - 1].queueNumber
+      : 0;
     // const currentQueueNumber = todayService.queues.length;
     await todayService.queues.push({
       name,
