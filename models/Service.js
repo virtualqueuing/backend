@@ -64,4 +64,5 @@ const serviceSchema = new mongoose.Schema({
   queues: [QueueSchema],
 });
 
+
 module.exports = mongoose.model('Service', serviceSchema);

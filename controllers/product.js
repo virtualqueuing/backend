@@ -1,4 +1,5 @@
 const Product = require('../models/product');
+const testQueue = require('../app.js');  //如何连上app.js 里的testQueue? 
 
 /**
  * @swagger
@@ -82,6 +83,15 @@ async function getProductByCode(req, res) {
   return res.json(product);
 }
 
+async function getProductByState(req, res) {
+  const { state } = req.params;
+  const data = await testQueue.find(state).exec(); //如何连上app.js 里的testQueue? 
+  if (!data) {
+    return res.status(404).json({ error: 'product cannot be found' });
+  }
+  return res.json(data);
+}
+
 /**
  * @swagger
  * /v1/products:
@@ -120,6 +130,7 @@ async function addProduct(req, res) {
     name,
     description,
     soldOut,
+    state,
   });
 
   await product.save();
@@ -169,4 +180,5 @@ module.exports = {
   getProductByCode,
   addProduct,
   updateProductByCode,
+  getProductByState,
 };
