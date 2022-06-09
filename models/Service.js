@@ -11,6 +11,7 @@ const QueueSchema = new mongoose.Schema(
     phoneNumber: {
       type: String,
       required: true,
+      unique: true,
       validate: {
         validator: (v) => v.length === 10,
         message: (props) => `${props.value} is not a legitimate Australian number.`,
