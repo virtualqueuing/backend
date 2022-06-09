@@ -20,7 +20,7 @@ app.use(helmet());
 app.use(cors());
 app.use(xss());
 
-app.use(express.urlencoded({extended:false}));
+// app.use(express.urlencoded({extended:false}));
 
 // routes
 app.use('/v1', v1Router);
@@ -48,7 +48,6 @@ const testQueue = [
   {state:'absent',name:'Mike', phone:'0422788969',people:8,tableType:'large'}
 ]
 
-//June 7th, Stephy's code-start// get('/:state',
 app.get('/testQueue',(req,res)=>res.status(200).send({testQueue}));
 app.get('/:state',(req,res)=>res.status(200).send({data}));
 
