@@ -1,5 +1,9 @@
 const Product = require('../models/product');
 
+//June 7th, Stephy'code --start//
+const Data = require('../app.js');  //如何连上app.js 里的testQueue? 
+//June 7th, Stephy'code --end//
+
 /**
  * @swagger
  * components:
@@ -82,6 +86,17 @@ async function getProductByCode(req, res) {
   return res.json(product);
 }
 
+// June 7th, Stephy's code --start//
+async function getProductByState(req, res) {
+  const { state } = req.params;
+  const data = await Data.findById(state).exec(); //如何连上app.js 里的testQueue? 
+  if (!data) {
+    return res.status(404).json({ error: 'product cannot be found' });
+  }
+  return res.json(data);
+}
+// June 7th, Stephy's code --end//
+
 /**
  * @swagger
  * /v1/products:
@@ -120,6 +135,9 @@ async function addProduct(req, res) {
     name,
     description,
     soldOut,
+     //June 7th, Stephy's code--start//
+     state,
+     //June 7th, Stephy's code--end//
   });
 
   await product.save();
@@ -169,4 +187,7 @@ module.exports = {
   getProductByCode,
   addProduct,
   updateProductByCode,
+   //June 7th, Stephy's code --start//
+   getProductByState,
+   //June 7th ,Stephy's code --end//
 };
