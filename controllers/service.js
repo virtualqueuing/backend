@@ -192,4 +192,30 @@ const getQueueById = async (req, res) => {
   return res.json(queue);
 };
 
-module.exports = { getAllQueues, addService, addQueue, getQueueById, getTodayQueues };
+const updateQueueById = async (req, res) => {
+  const { id } = req.params;
+  const matchingDate = getCurrentDate(); // logic to check if database with today's
+  const todayService = await Service.findOne({ dateString: matchingDate }).exec();
+  todayService.queues.id(id).set(req.body);
+  await todayService.save();
+  return res.status(201).json(todayService);
+};
+
+const updateQueueStatus = async (req, res) => {
+  const { id, action } = req.params;
+  const matchingDate = getCurrentDate(); // logic to check if database with today's'
+  const todayService = await Service.findOne({ dateString: matchingDate }).exec();
+  todayService.queues.id(id).status = action;
+  await todayService.save();
+  return res.status(201).json(todayService);
+};
+
+module.exports = {
+  getAllQueues,
+  addService,
+  addQueue,
+  getQueueById,
+  getTodayQueues,
+  updateQueueById,
+  updateQueueStatus,
+};
