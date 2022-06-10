@@ -1,5 +1,11 @@
 const Service = require('../models/Service');
 
+// get today's matching date
+const getCurrentDate = () => {
+  const currentDate = new Date(Date.now());
+  return `${currentDate.getYear() + 1900}-${currentDate.getMonth() + 1}-${currentDate.getDate()}`;
+};
+
 /**
  * @swagger
  * components:
@@ -70,6 +76,17 @@ const getAllQueues = async (req, res) => {
   return res.json(queues);
 };
 
+const getTodayQueues = async (req, res) => {
+  const matchingDate = getCurrentDate(); // logic to check if database with today's date exists
+  try {
+    const todayService = await Service.findOne({ dateString: matchingDate }).exec();
+    const { queues } = todayService;
+    return res.json(queues);
+  } catch (err) {
+    return res.status(500).json(err);
+  }
+};
+
 /**
  *
  * @swagger
@@ -120,11 +137,7 @@ const addService = async (req, res) => {
  */
 const addQueue = async (req, res) => {
   const { name, phoneNumber, guestsNumber, tableSize, notes } = req.body;
-  const currentDate = new Date(Date.now());
-  const matchingDate = `${currentDate.getYear() + 1900}-${
-    currentDate.getMonth() + 1
-  }-${currentDate.getDate()}`;
-  // logic to check if database with today's date exists
+  const matchingDate = getCurrentDate(); // logic to check if database with today's date exists
   try {
     const todayService = await Service.findOne({ dateString: matchingDate }).exec();
     const lastQueueNumber = todayService.queues.length
@@ -170,10 +183,7 @@ const addQueue = async (req, res) => {
  */
 const getQueueById = async (req, res) => {
   const { id } = req.params;
-  const currentDate = new Date(Date.now());
-  const matchingDate = `${currentDate.getYear() + 1900}-${
-    currentDate.getMonth() + 1
-  }-${currentDate.getDate()}`;
+  const matchingDate = getCurrentDate(); // logic to check if database with today's date exists
   const todayService = await Service.findOne({ dateString: matchingDate }).exec();
   const queue = todayService.queues.id(id);
   if (!queue) {
@@ -182,4 +192,4 @@ const getQueueById = async (req, res) => {
   return res.json(queue);
 };
 
-module.exports = { getAllQueues, addService, addQueue, getQueueById };
+module.exports = { getAllQueues, addService, addQueue, getQueueById, getTodayQueues };
