@@ -6,6 +6,8 @@ const {
   addService,
   getQueueById,
   getTodayQueues,
+  updateQueueById,
+  updateQueueStatus,
 } = require('../controllers/service');
 
 const queueRouter = Router();
@@ -15,6 +17,7 @@ queueRouter.post('', addQueue);
 queueRouter.get('/initiate', addService);
 queueRouter.get('/all', getAllQueues);
 queueRouter.get('/:id', getQueueById);
-// queueRouter.put('/:code', updateProductByCode);
+queueRouter.put('/:id', updateQueueById);
+queueRouter.get('/:id/:action', updateQueueStatus);
 
 module.exports = queueRouter;
