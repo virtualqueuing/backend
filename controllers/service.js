@@ -87,6 +87,17 @@ const getTodayQueues = async (req, res) => {
   }
 };
 
+const getServiceByStatus = async (req, res) => {
+  const { status } = req.params;
+  const matchingDate = getCurrentDate(); 
+  const todayService = await Service.findOne({ dateString: matchingDate }).exec();
+  const statusEnquery = todayService.queues.find({status:'Completed'}).exec();
+  if (!statusEnquery) {
+    return res.status(404).json({ error: 'Queue Not Found!' });
+  }
+  return res.json(statusEnquery);
+};
+
 /**
  *
  * @swagger
@@ -218,4 +229,5 @@ module.exports = {
   getTodayQueues,
   updateQueueById,
   updateQueueStatus,
+  getServiceByStatus,
 };
