@@ -14,10 +14,10 @@ const queueRouter = Router();
 
 queueRouter.get('', getTodayQueues);
 queueRouter.post('', addQueue);
-queueRouter.get('/initiate', addService);
+queueRouter.post('/initiate', addService);
 queueRouter.get('/all', getAllQueues);
 queueRouter.get('/:id', getQueueById);
 queueRouter.put('/:id', updateQueueById);
-queueRouter.get('/:id/:action', updateQueueStatus);
+queueRouter.put('/:id/:action', updateQueueStatus);
 
 module.exports = queueRouter;
