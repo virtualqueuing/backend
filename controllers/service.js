@@ -1,5 +1,6 @@
 const Service = require('../models/Service');
 
+
 // get today's matching date
 const getCurrentDate = () => {
   const currentDate = new Date(Date.now());
@@ -57,39 +58,6 @@ const getCurrentDate = () => {
 /**
  *
  * @swagger
- * /v1/queues:
- *  get:
- *    summary: Return all queues
- *    tags: [Queues]
- *    responses:
- *      200:
- *        description: array of queues
- *        content:
- *          application/json:
- *            schema:
- *              type: array
- *              items:
- *                $ref: '#/components/schemas/Queue'
- */
-const getAllQueues = async (req, res) => {
-  const queues = await Service.find().exec();
-  return res.json(queues);
-};
-
-const getTodayQueues = async (req, res) => {
-  const matchingDate = getCurrentDate(); // logic to check if database with today's date exists
-  try {
-    const todayService = await Service.findOne({ dateString: matchingDate }).exec();
-    const { queues } = todayService;
-    return res.json(queues);
-  } catch (err) {
-    return res.status(500).json(err);
-  }
-};
-
-/**
- *
- * @swagger
  * /v1/queues/initiate:
  *  get:
  *    summary: Create a new collection of queues for today
@@ -109,6 +77,43 @@ const addService = async (req, res) => {
   await service.save();
   return res.status(201).json(service);
 };
+
+/**
+ *
+ * @swagger
+ * /v1/queues:
+ *  get:
+ *    summary: Return all queues
+ *    tags: [Queues]
+ *    responses:
+ *      200:
+ *        description: array of queues
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: array
+ *              items:
+ *                $ref: '#/components/schemas/Queue'
+ */
+const getAllQueues = async (req, res) => {
+  const queuesHistory = await Service.find().exec();
+  return res.json(queuesHistory);
+};
+
+const getTodayQueues = async (req, res) => {
+  const matchingDate = getCurrentDate()
+  try {
+    if (await Service.find({"dateString": matchingDate}).count() === 0) {
+      const service = new Service({});
+      await service.save();
+    }
+      const { queues } = await Service.findOne({ dateString: matchingDate }).exec();
+      return res.json(queues)
+  } catch (err) {
+    return res.status(500).json(err);
+  }
+};
+
 
 /**
  * @swagger
