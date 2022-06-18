@@ -44,8 +44,11 @@ const QueueSchema = new mongoose.Schema(
       default: 'Waiting',
     },
     notes: {
-      type: String,
-      maxlength: 250,
+      type: [{
+        type: String,
+        minLength: 3,
+        maxLength: 30,
+      }],
     },
   },
   {
