@@ -19,7 +19,7 @@ const QueueSchema = new mongoose.Schema(
     },
     location: {
       type: String,
-      default: 'Sunnybank',
+      enum: ['Brisbane CBD', 'Sunnybank', 'Chermside'],
     },
     queueNumber: {
       type: Number,
@@ -44,11 +44,13 @@ const QueueSchema = new mongoose.Schema(
       default: 'Waiting',
     },
     notes: {
-      type: [{
-        type: String,
-        minLength: 3,
-        maxLength: 30,
-      }],
+      type: [
+        {
+          type: String,
+          minLength: 3,
+          maxLength: 30,
+        },
+      ],
     },
   },
   {
