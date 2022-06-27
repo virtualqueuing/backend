@@ -1,6 +1,5 @@
 const Service = require('../models/Service');
 
-
 // get today's matching date
 const getCurrentDate = () => {
   const currentDate = new Date(Date.now());
@@ -101,19 +100,18 @@ const getAllQueues = async (req, res) => {
 };
 
 const getTodayQueues = async (req, res) => {
-  const matchingDate = getCurrentDate()
+  const matchingDate = getCurrentDate();
   try {
-    if (await Service.find({"dateString": matchingDate}).count() === 0) {
+    if ((await Service.find({ dateString: matchingDate }).count()) === 0) {
       const service = new Service({});
       await service.save();
     }
-      const { queues } = await Service.findOne({ dateString: matchingDate }).exec();
-      return res.json(queues)
+    const { queues } = await Service.findOne({ dateString: matchingDate }).exec();
+    return res.json(queues);
   } catch (err) {
     return res.status(500).json(err);
   }
 };
-
 
 /**
  * @swagger
