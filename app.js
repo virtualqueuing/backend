@@ -17,7 +17,11 @@ const app = express();
 app.use(express.json());
 // extra security package
 app.use(helmet());
-app.use(cors());
+app.use(
+  cors({
+    exposedHeaders: 'X-Auth-Token',
+  })
+);
 app.use(xss());
 
 // routes
