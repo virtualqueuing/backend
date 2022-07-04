@@ -9,7 +9,10 @@ const register = async (req, res) => {
   res
     .set('X-Auth-Token', token)
     .status(StatusCodes.CREATED)
-    .json({ user: { name: user.name }, token });
+    .json({
+      user: { userName: user.userName, email: user.email, role: user.role, branch: user.branch },
+      token,
+    });
 };
 
 const login = async (req, res) => {
@@ -23,7 +26,10 @@ const login = async (req, res) => {
   if (!isPasswordCorrect) throw new UnauthenticatedError('Invalid Credentials');
 
   const token = user.createJWT();
-  res.status(StatusCodes.OK).json({ user: { name: user.name }, token });
+  res.status(StatusCodes.OK).json({
+    user: { userName: user.userName, email: user.email, role: user.role, branch: user.branch },
+    token,
+  });
 };
 
 module.exports = { register, login };
