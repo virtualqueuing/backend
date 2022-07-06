@@ -1,5 +1,5 @@
-const jwt = require('jsonwebtoken');
 const { UnauthenticatedError } = require('../errors');
+const { validateToken } = require('../utils/jwt');
 
 const auth = (req, res, next) => {
   const authHeader = req.headers.authorization;
@@ -8,12 +8,11 @@ const auth = (req, res, next) => {
   }
   const token = authHeader.split(' ')[1];
 
-  try {
-    const payload = jwt.verify(token, process.env.JWT_SECRET);
-
-    req.user = { userId: payload.userId, name: payload.name };
+  const payload = validateToken(token);
+  if (payload) {
+    req.user = payload;
     next();
-  } catch (error) {
+  } else {
     throw new UnauthenticatedError('Authorization invalid');
   }
 };
