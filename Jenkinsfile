@@ -1,0 +1,53 @@
+pipeline {
+    agent any
+    environment {
+        MONGO_URI= credentials('MONGO_URI')
+        LOCAL_STRING='mongodb://localhost:27017/virtualQueuing'
+        JWT_SECRET=credentials('JWT_SECRET')
+        JWT_LIFETIME=7d
+        TWILIO_ACCOUNT_SID=credentials('TWILIO_ACCOUNT_SID')
+        TWILIO_AUTH_TOKEN=credentials('TWILIO_AUTH_TOKEN')
+        TWILIO_PHONE_NUMBER=credentials('TWILIO_PHONE_NUMBER')
+    }
+
+    stages {
+    // Building Docker images
+         stage('Login to ECR') {
+            steps{
+                script {
+                    sh 'aws ecr get-login-password --region ap-southeast-2 | docker login --username AWS --password-stdin 590698713442.dkr.ecr.ap-southeast-2.amazonaws.com'
+                }
+            }
+        }
+        stage('Building image') {
+            steps{
+                // withAWSParameterStore(credentialsId: 'AWS Xianhuali user', naming: 'basename', path: '', recursive: true, regionName: 'ap-southeast-2') {
+                    script {
+                        sh 'docker build -t p3-back-repo . --build-arg MONGO_URI=$MONGO_URI --build-arg LOCAL_STRING=$LOCAL_STRING --build-arg JWT_SECRET=$JWT_SECRET --build-arg JWT_LIFETIME=$JWT_LIFETIME --build-arg TWILIO_ACCOUNT_SID=$TWILIO_ACCOUNT_SID --build-arg TWILIO_AUTH_TOKEN=$TWILIO_AUTH_TOKEN --build-arg TWILIO_PHONE_NUMBER=$TWILIO_PHONE_NUMBER'
+                        sh 'docker tag p3-back-repo:latest 590698713442.dkr.ecr.ap-southeast-2.amazonaws.com/p3-back-repo:latest'
+                    }
+            }
+        }
+        
+   
+    // Uploading Docker images into AWS ECR
+        stage('Pushing to ECR') {
+            steps{  
+                script {
+                    
+                    sh 'docker push 590698713442.dkr.ecr.ap-southeast-2.amazonaws.com/p3-back-repo:latest'
+                }
+            }
+        }
+
+        stage('Pushing to ECS') {
+            steps{  
+                withAWS(credentials: 'aws jessieli user', region: 'ap-southeast-2') {
+                    echo "Deployingto ECS..."
+                    sh 'aws ecs update-service --cluster p3-back-cluster --service p3-back-service --force-new-deployment'    
+                    }
+                
+                }
+        }
+    }
+}
