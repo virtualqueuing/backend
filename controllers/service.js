@@ -1,3 +1,4 @@
+const { StatusCodes } = require('http-status-codes');
 const Service = require('../models/Service');
 
 // get today's matching date
@@ -74,7 +75,7 @@ const getCurrentDate = () => {
 const addService = async (req, res) => {
   const service = new Service({});
   await service.save();
-  return res.status(201).json(service);
+  return res.status(StatusCodes.CREATED).json(service);
 };
 
 /**
@@ -107,9 +108,9 @@ const getTodayQueues = async (req, res) => {
       await service.save();
     }
     const { queues } = await Service.findOne({ dateString: matchingDate }).exec();
-    return res.status(200).json(queues);
+    return res.status(StatusCodes.OK).json(queues);
   } catch (err) {
-    return res.status(500).json(err);
+    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(err);
   }
 };
 
@@ -156,9 +157,9 @@ const addQueue = async (req, res) => {
       notes,
     });
     await todayService.save();
-    return res.status(201).json(todayService);
+    return res.status(StatusCodes.CREATED).json(todayService);
   } catch (err) {
-    return res.status(500).json(err);
+    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(err);
   }
 };
 
@@ -190,9 +191,9 @@ const getQueueById = async (req, res) => {
   const todayService = await Service.findOne({ dateString: matchingDate }).exec();
   const queue = todayService.queues.id(id);
   if (!queue) {
-    return res.status(404).json({ error: 'Queue Not Found!' });
+    return res.status(StatusCodes.NOT_FOUND).json({ error: 'Queue Not Found!' });
   }
-  return res.status(200).json(queue);
+  return res.status(StatusCodes.OK).json(queue);
 };
 
 const updateQueueById = async (req, res) => {
@@ -201,7 +202,7 @@ const updateQueueById = async (req, res) => {
   const todayService = await Service.findOne({ dateString: matchingDate }).exec();
   todayService.queues.id(id).set(req.body);
   await todayService.save();
-  return res.status(201).json(todayService);
+  return res.status(StatusCodes.CREATED).json(todayService);
 };
 
 const setQueueComplete = async (req, res) => {
@@ -211,7 +212,7 @@ const setQueueComplete = async (req, res) => {
   todayService.queues.id(id).status = 'Completed';
   await todayService.save();
   const { queues } = todayService;
-  return res.status(201).json(queues);
+  return res.status(StatusCodes.CREATED).json(queues);
 };
 
 const setQueueAbsent = async (req, res) => {
@@ -223,7 +224,7 @@ const setQueueAbsent = async (req, res) => {
   todayService.queues.id(id).absentReason = absentReason;
   await todayService.save();
   const { queues } = todayService;
-  return res.status(201).json(queues);
+  return res.status(StatusCodes.CREATED).json(queues);
 };
 
 module.exports = {
