@@ -7,7 +7,8 @@ const {
   getQueueById,
   getTodayQueues,
   updateQueueById,
-  updateQueueStatus,
+  setQueueAbsent,
+  setQueueComplete
 } = require('../controllers/service');
 
 const queueRouter = Router();
@@ -18,6 +19,7 @@ queueRouter.post('/initiate', addService);
 queueRouter.get('/all', getAllQueues);
 queueRouter.get('/:id', getQueueById);
 queueRouter.put('/:id', updateQueueById);
-queueRouter.put('/:id/:action', updateQueueStatus);
+queueRouter.put('/:id/complete', setQueueComplete);
+queueRouter.put('/:id/absent', setQueueAbsent);
 
 module.exports = queueRouter;

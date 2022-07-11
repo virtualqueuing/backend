@@ -1,18 +1,23 @@
 const { StatusCodes } = require('http-status-codes');
 const User = require('../models/User');
 const { BadRequestError, UnauthenticatedError } = require('../errors');
+const { generateToken } = require('../utils/jwt');
 
 const register = async (req, res) => {
-  const user = await User.create({ ...req.body });
+  const user = new User({ ...req.body });
 
-  const token = user.createJWT();
-  res
-    .set('X-Auth-Token', token)
-    .status(StatusCodes.CREATED)
-    .json({
-      user: { userName: user.userName, email: user.email, role: user.role, branch: user.branch },
-      token,
-    });
+  await user.save();
+  const token = generateToken({ user });
+  return res.status(StatusCodes.CREATED).json({
+    data: {
+      email: user.email,
+      role: user.role,
+      userName: user.userName,
+      branch: user.branch,
+      _id: user._id,
+    },
+    token,
+  });
 };
 
 const login = async (req, res) => {
@@ -25,9 +30,15 @@ const login = async (req, res) => {
   const isPasswordCorrect = await user.comparePassword(password);
   if (!isPasswordCorrect) throw new UnauthenticatedError('Invalid Credentials');
 
-  const token = user.createJWT();
+  const token = generateToken({ user });
   res.status(StatusCodes.OK).json({
-    user: { userName: user.userName, email: user.email, role: user.role, branch: user.branch },
+    data: {
+      email: user.email,
+      role: user.role,
+      userName: user.userName,
+      branch: user.branch,
+      _id: user._id,
+    },
     token,
   });
 };

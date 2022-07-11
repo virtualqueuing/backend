@@ -107,7 +107,7 @@ const getTodayQueues = async (req, res) => {
       await service.save();
     }
     const { queues } = await Service.findOne({ dateString: matchingDate }).exec();
-    return res.json(queues);
+    return res.status(200).json(queues);
   } catch (err) {
     return res.status(500).json(err);
   }
@@ -192,7 +192,7 @@ const getQueueById = async (req, res) => {
   if (!queue) {
     return res.status(404).json({ error: 'Queue Not Found!' });
   }
-  return res.json(queue);
+  return res.status(200).json(queue);
 };
 
 const updateQueueById = async (req, res) => {
@@ -204,14 +204,29 @@ const updateQueueById = async (req, res) => {
   return res.status(201).json(todayService);
 };
 
-const updateQueueStatus = async (req, res) => {
-  const { id, action } = req.params;
-  const matchingDate = getCurrentDate(); // logic to check if database with today's'
+const setQueueComplete = async (req, res) => {
+  const { id } = req.params;
+  const matchingDate = getCurrentDate(); // update queue status to completed
   const todayService = await Service.findOne({ dateString: matchingDate }).exec();
-  todayService.queues.id(id).status = action;
+  todayService.queues.id(id).status = 'Completed';
   await todayService.save();
-  return res.status(201).json(todayService);
+  const { queues } = todayService
+  return res.status(201).json(queues);
 };
+
+
+const setQueueAbsent = async (req, res) => {
+  const { id } = req.params;
+  const { absentReason } = req.body;
+  const matchingDate = getCurrentDate(); // update queue status to completed
+  const todayService = await Service.findOne({ dateString: matchingDate }).exec();
+  todayService.queues.id(id).status = 'Absent';
+  todayService.queues.id(id).absentReason = absentReason;
+  await todayService.save();
+  const { queues } = todayService
+  return res.status(201).json(queues);
+};
+
 
 module.exports = {
   getAllQueues,
@@ -220,5 +235,6 @@ module.exports = {
   getQueueById,
   getTodayQueues,
   updateQueueById,
-  updateQueueStatus,
+  setQueueAbsent,
+  setQueueComplete
 };

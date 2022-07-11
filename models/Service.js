@@ -43,6 +43,9 @@ const QueueSchema = new mongoose.Schema(
       required: true,
       default: 'Waiting',
     },
+    absentReason: {
+      type: String,
+    },
     notes: {
       type: [
         {
