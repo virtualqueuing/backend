@@ -7,8 +7,6 @@ const register = async (req, res) => {
   const user = new User({ ...req.body });
   const repeatUser = await User.findOne({ data: user });
 
-  console.log('==============');
-
   if (user.email === repeatUser.email) {
     res
       .status(400)
