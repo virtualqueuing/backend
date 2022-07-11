@@ -210,10 +210,9 @@ const setQueueComplete = async (req, res) => {
   const todayService = await Service.findOne({ dateString: matchingDate }).exec();
   todayService.queues.id(id).status = 'Completed';
   await todayService.save();
-  const { queues } = todayService
+  const { queues } = todayService;
   return res.status(201).json(queues);
 };
-
 
 const setQueueAbsent = async (req, res) => {
   const { id } = req.params;
@@ -223,10 +222,9 @@ const setQueueAbsent = async (req, res) => {
   todayService.queues.id(id).status = 'Absent';
   todayService.queues.id(id).absentReason = absentReason;
   await todayService.save();
-  const { queues } = todayService
+  const { queues } = todayService;
   return res.status(201).json(queues);
 };
-
 
 module.exports = {
   getAllQueues,
@@ -236,5 +234,5 @@ module.exports = {
   getTodayQueues,
   updateQueueById,
   setQueueAbsent,
-  setQueueComplete
+  setQueueComplete,
 };

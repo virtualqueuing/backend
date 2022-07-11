@@ -8,7 +8,7 @@ const {
   getTodayQueues,
   updateQueueById,
   setQueueAbsent,
-  setQueueComplete
+  setQueueComplete,
 } = require('../controllers/service');
 
 const queueRouter = Router();

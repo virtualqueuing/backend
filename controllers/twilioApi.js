@@ -23,17 +23,25 @@ const client = require('twilio')(accountSid, authToken);
  *                message: 'Text sent!'
  */
 
-const sendText = (req, res) => {
-  client.messages
-    .create({
-      body: 'Welcome to Virtual Queuing',
-      to: '+61416561624', // Ting's number
-      from: twilioPhoneNumber,
-    })
-    .then((message) => console.log(message.sid))
-    .catch((err) => console.log(err));
+const sendText = async (req, res) => {
+  const { name, currentPosition, branch } = req.body; // phoneNumber is another input
+  const estimatedTime = currentPosition * 10;
+  const message = await client.messages.create({
+    body: `Dear ${name}, there are currently ${
+      currentPosition - 1
+    } groups in front of you in the waiting queue for dinning in our ${branch} branch. The estimated wait time is ${estimatedTime} minutes. Thanks for choosing Virtual Queuing.`,
+    // to: '+61416561624', // Ting's number
+    // to: phoneNumber,
+    to: '+61433574889',
+    from: twilioPhoneNumber,
+  });
 
-  return res.status(200).send({ message: 'Text sent!' });
+  try {
+    console.log(message.sid);
+  } catch (err) {
+    console.log(err);
+  }
+  return res.status(200).send({ message: 'Message Sent!' });
 };
 
 module.exports = { sendText };

@@ -4,6 +4,6 @@ const { sendText } = require('../controllers/twilioApi');
 
 const sendTextRouter = Router();
 
-sendTextRouter.get('', sendText);
+sendTextRouter.post('', sendText);
 
 module.exports = sendTextRouter;
