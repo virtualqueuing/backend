@@ -5,6 +5,13 @@ const { generateToken } = require('../utils/jwt');
 
 const register = async (req, res) => {
   const user = new User({ ...req.body });
+  const repeatUser = await User.findOne({ data: user });
+
+  if (user.email === repeatUser.email) {
+    res
+      .status(400)
+      .json([{ email: user.email }, { error: 'This email address is already being used' }]);
+  }
 
   await user.save();
   const token = generateToken({ user });
