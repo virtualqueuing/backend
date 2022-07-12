@@ -24,23 +24,32 @@ const client = require('twilio')(accountSid, authToken);
  */
 
 const sendText = async (req, res) => {
-  const { name, currentPosition, branch } = req.body; // phoneNumber is another input
-  const estimatedTime = currentPosition * 10;
-  const message = await client.messages.create({
-    body: `Dear ${name}, there are currently ${
-      currentPosition - 1
-    } groups in front of you in the waiting queue for dinning in our ${branch} branch. The estimated wait time is ${estimatedTime} minutes. Thanks for choosing Virtual Queuing.`,
-    // to: '+61416561624', // Ting's number
-    // to: phoneNumber,
-    to: '+61433574889',
-    from: twilioPhoneNumber,
-  });
-
-  try {
-    console.log(message.sid);
-  } catch (err) {
-    console.log(err);
-  }
+  const { name, queueInFront, branch } = req.body;
+  const waitTimePerCustomer = 5;
+  const estimatedTime = queueInFront * waitTimePerCustomer;
+  if (queueInFront === 0) {
+    const message = await client.messages.create({
+      body: `Dear ${name}, you are next in line in our queue for dinning in our ${branch} branch. Please proceed to our reception and wait to be seated.`,
+      to: '+61433574889',
+      from: twilioPhoneNumber,
+    })
+    try {
+      console.log(message.sid)
+    } catch (err) {
+      console.log(err)
+    }
+  } else {
+    const message = await client.messages.create({
+      body: `Dear ${name}, there are currently ${queueInFront} groups in front of you in the waiting queue for dinning in our ${branch} branch. The estimated wait time is ${estimatedTime} minutes. Thanks for choosing Virtual Queuing.`,
+      to: '+61433574889',
+      from: twilioPhoneNumber,
+    })
+    try {
+      console.log(message.sid);
+    } catch (err) {
+      console.log(err);
+    }
+  };
   return res.status(200).send({ message: 'Message Sent!' });
 };
 
