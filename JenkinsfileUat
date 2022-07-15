@@ -44,7 +44,7 @@ pipeline {
             steps{  
                 withAWS(credentials: 'aws jessieli user', region: 'ap-southeast-2') {
                     echo "Deployingto ECS..."
-                    sh 'aws ecs update-service --cluster p3-back-cluster --service p3-back-service --force-new-deployment'    
+                    sh 'aws ecs update-service --cluster uat-p3-cluster-terraform --service uat-p3-ecs-service-terraform --force-new-deployment'    
                     }
                 
                 }
