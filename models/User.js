@@ -12,7 +12,7 @@ const UserSchema = new mongoose.Schema({
     ],
     unique: true,
   },
-  userName: {
+  fullName: {
     type: String,
     required: [true, 'Please provide name'],
     minlength: 3,
