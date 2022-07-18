@@ -19,7 +19,7 @@ const register = async (req, res) => {
     data: {
       email: user.email,
       role: user.role,
-      userName: user.userName,
+      fullName: user.fullName,
       branch: user.branch,
       _id: user._id,
     },
@@ -42,7 +42,7 @@ const login = async (req, res) => {
     data: {
       email: user.email,
       role: user.role,
-      userName: user.userName,
+      fullName: user.fullName,
       branch: user.branch,
       _id: user._id,
     },
