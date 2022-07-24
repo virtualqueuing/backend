@@ -36,7 +36,14 @@ const QueueSchema = new mongoose.Schema(
     },
     mealType: {
       type: String,
-      default: 'Lunch',
+      default() {
+        const createdTime = new Date(Date.now());
+        const hour = createdTime.getHours();
+        if (hour < 15) {
+          return 'Lunch';
+        }
+        return 'Dinner';
+      },
     },
     status: {
       type: String,
