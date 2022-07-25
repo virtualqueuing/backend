@@ -4,7 +4,7 @@ pipeline {
         MONGO_URI= credentials('MONGO_URI')
         LOCAL_STRING='mongodb://localhost:27017/virtualQueuing'
         JWT_SECRET=credentials('JWT_SECRET')
-        JWT_LIFETIME=credentials('7d')
+        JWT_LIFETIME=credentials('JWT_LIFETIME')
         TWILIO_ACCOUNT_SID=credentials('TWILIO_ACCOUNT_SID')
         TWILIO_AUTH_TOKEN=credentials('TWILIO_AUTH_TOKEN')
         TWILIO_PHONE_NUMBER=credentials('TWILIO_PHONE_NUMBER')
