@@ -5,9 +5,8 @@ const { generateToken } = require('../utils/jwt');
 
 const register = async (req, res) => {
   const user = new User({ ...req.body });
-  const repeatUser = await User.findOne({ email: user.email });
 
-  if (repeatUser === null) {
+  if (!(await User.findOne({ email: user.email }))) {
     await user.save();
     const token = generateToken({ user });
     return res.status(StatusCodes.CREATED).json({
@@ -20,13 +19,8 @@ const register = async (req, res) => {
       },
       token,
     });
-  } 
-    throw new ConflictError('This email address is already being used');
-  
-
-  // if (user.email === repeatUser.email) {
-  //   throw new ConflictError('This email address is already being used');
-  // }
+  }
+  throw new ConflictError('This email address is already being used');
 };
 
 const login = async (req, res) => {
