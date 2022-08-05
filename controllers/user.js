@@ -66,10 +66,8 @@ const updatePassowrdById = async (req, res) => {
       },
       { new: true }
     );
-    return res.status(StatusCodes.OK).json('password is correct');
-  } 
-    return false;
-  
+  }
+  return res.status(StatusCodes.OK).json('password is correct');
 };
 
 module.exports = {
