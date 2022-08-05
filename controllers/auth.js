@@ -5,9 +5,10 @@ const { generateToken } = require('../utils/jwt');
 
 const register = async (req, res) => {
   const user = new User({ ...req.body });
+  const exists = await User.findOne({ email: user.email });
 
-  if (await User.findOne({ email: user.email })) {
-    throw new ConflictError('This email address is already being used');
+  if (exists) {
+    throw new ConflictError('This email is already being used');
   } else {
     await user.save();
     const token = generateToken({ user });

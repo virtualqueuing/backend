@@ -1,9 +1,10 @@
 const { Router } = require('express');
-const { getUserById, updateUserById } = require('../controllers/user');
+const { getUserById, updateUserById, updatePassowrdById } = require('../controllers/user');
 
 const userRouter = Router();
 
 userRouter.get('/:id', getUserById);
 userRouter.put('/:id', updateUserById);
+userRouter.put('/admin/:id', updatePassowrdById);
 
 module.exports = userRouter;

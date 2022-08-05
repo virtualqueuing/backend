@@ -1,4 +1,5 @@
 const { StatusCodes } = require('http-status-codes');
+const bcrypt = require('bcryptjs');
 const User = require('../models/User');
 
 const getUserById = async (req, res) => {
@@ -28,6 +29,7 @@ const updateUserById = async (req, res) => {
       },
       { new: true }
     );
+
     return res.status(StatusCodes.OK).json({
       data: {
         email: user.email,
@@ -43,7 +45,32 @@ const updateUserById = async (req, res) => {
   }
 };
 
+const updatePassowrdById = async (req, res) => {
+  const { id } = req.params;
+  const { password, newPassword } = req.body;
+
+  const user = await User.findById(id);
+  const isPasswordCorrect = await user.comparePassword(password);
+
+  if (!isPasswordCorrect) {
+    return res.status(StatusCodes.UNAUTHORIZED).json('password is not correct');
+  } 
+    const salt = await bcrypt.genSalt(10);
+    const hashNewPassword = await bcrypt.hash(newPassword, salt);
+    await User.findByIdAndUpdate(
+      id,
+      {
+        $set: { password: hashNewPassword },
+      },
+      { new: true }
+    );
+
+    return res.status(StatusCodes.OK).json('password is correct');
+  
+};
+
 module.exports = {
   getUserById,
   updateUserById,
+  updatePassowrdById,
 };
