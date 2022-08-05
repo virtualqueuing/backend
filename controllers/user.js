@@ -45,6 +45,7 @@ const updateUserById = async (req, res) => {
   }
 };
 
+// eslint-disable-next-line consistent-return
 const updatePassowrdById = async (req, res) => {
   const { id } = req.params;
   const { password, newPassword } = req.body;
@@ -56,16 +57,18 @@ const updatePassowrdById = async (req, res) => {
     return res.status(StatusCodes.UNAUTHORIZED).json('password is not correct');
   }
 
-  const salt = await bcrypt.genSalt(10);
-  const hashNewPassword = await bcrypt.hash(newPassword, salt);
-  await User.findByIdAndUpdate(
-    id,
-    {
-      $set: { password: hashNewPassword },
-    },
-    { new: true }
-  );
-  return res.status(StatusCodes.OK).json('password is correct');
+  if (isPasswordCorrect) {
+    const salt = await bcrypt.genSalt(10);
+    const hashNewPassword = await bcrypt.hash(newPassword, salt);
+    await User.findByIdAndUpdate(
+      id,
+      {
+        $set: { password: hashNewPassword },
+      },
+      { new: true }
+    );
+    return res.status(StatusCodes.OK).json('password is correct');
+  }
 };
 
 module.exports = {
