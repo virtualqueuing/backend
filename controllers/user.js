@@ -54,19 +54,18 @@ const updatePassowrdById = async (req, res) => {
 
   if (!isPasswordCorrect) {
     return res.status(StatusCodes.UNAUTHORIZED).json('password is not correct');
-  } 
-    const salt = await bcrypt.genSalt(10);
-    const hashNewPassword = await bcrypt.hash(newPassword, salt);
-    await User.findByIdAndUpdate(
-      id,
-      {
-        $set: { password: hashNewPassword },
-      },
-      { new: true }
-    );
+  }
 
-    return res.status(StatusCodes.OK).json('password is correct');
-  
+  const salt = await bcrypt.genSalt(10);
+  const hashNewPassword = await bcrypt.hash(newPassword, salt);
+  await User.findByIdAndUpdate(
+    id,
+    {
+      $set: { password: hashNewPassword },
+    },
+    { new: true }
+  );
+  return res.status(StatusCodes.OK).json('password is correct');
 };
 
 module.exports = {
