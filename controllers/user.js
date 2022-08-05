@@ -45,7 +45,6 @@ const updateUserById = async (req, res) => {
   }
 };
 
-// eslint-disable-next-line consistent-return
 const updatePassowrdById = async (req, res) => {
   const { id } = req.params;
   const { password, newPassword } = req.body;
@@ -68,7 +67,9 @@ const updatePassowrdById = async (req, res) => {
       { new: true }
     );
     return res.status(StatusCodes.OK).json('password is correct');
-  }
+  } 
+    return false;
+  
 };
 
 module.exports = {
