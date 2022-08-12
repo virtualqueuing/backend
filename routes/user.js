@@ -5,6 +5,6 @@ const userRouter = Router();
 
 userRouter.get('/:id', getUserById);
 userRouter.put('/:id', updateUserById);
-userRouter.put('/admin/:id', updatePassowrdById);
+userRouter.put('/:id/password', updatePassowrdById);
 
 module.exports = userRouter;
